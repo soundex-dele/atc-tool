@@ -11,7 +11,10 @@ use nwg::NativeUi;
 pub struct BasicApp {
     window: nwg::Window,
     layout: nwg::GridLayout,
+    layout_1: nwg::GridLayout,
     name_edit: nwg::TextInput,
+    name_edit_1: nwg::TextInput,
+
     hello_button: nwg::Button
 }
 
@@ -50,7 +53,7 @@ mod basic_app_ui {
             // Controls
             nwg::Window::builder()
                 .flags(nwg::WindowFlags::WINDOW | nwg::WindowFlags::VISIBLE)
-                .size((300, 115))
+                .size((1280, 840))
                 .position((300, 300))
                 .title("Basic example")
                 .build(&mut data.window)?;
@@ -60,7 +63,11 @@ mod basic_app_ui {
                 .parent(&data.window)
                 .focus(true)
                 .build(&mut data.name_edit)?;
-
+            nwg::TextInput::builder()
+                .text("Heisenberg")
+                .parent(&data.window)
+                .focus(true)
+                .build(&mut data.name_edit_1)?;
             nwg::Button::builder()
                 .text("Say my name")
                 .parent(&data.window)
@@ -91,13 +98,19 @@ mod basic_app_ui {
             };
 
            *ui.default_handler.borrow_mut() = Some(nwg::full_bind_event_handler(&ui.window.handle, handle_events));
-
+           // Layouts
+           nwg::GridLayout::builder()
+            .parent(&ui.window)
+            .spacing(5)
+            .child(0, 0, &ui.name_edit_1)
+            .child_item(nwg::GridLayoutItem::new(&ui.hello_button, 1, 0, 1, 2))
+            .build(&ui.layout_1)?;
            // Layouts
            nwg::GridLayout::builder()
             .parent(&ui.window)
             .spacing(1)
             .child(0, 0, &ui.name_edit)
-            .child_item(nwg::GridLayoutItem::new(&ui.hello_button, 0, 1, 1, 2))
+            .child_item(nwg::GridLayoutItem::new(&ui.hello_button, 1, 0, 1, 2))
             .build(&ui.layout)?;
 
             return Ok(ui);
